@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>پرونده‌ی محرمانه‌ی حاکمیت</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<script src="https://tapi.bale.ai/miniapp.js?3"></script>
+<style>
+  :root{
+    --ink:#0e1319;
+    --panel:#161d26;
+    --panel-raised:#1c2531;
+    --hairline:#2a3441;
+    --gold:#c9a15a;
+    --gold-bright:#e4c07f;
+    --paper:#eef1f4;
+    --steel:#8b95a3;
+    --signal:#b3432e;
+    --signal-bright:#d3593f;
+    --ok:#5a9c6e;
+    --radius:14px;
+    --mono:'IBM Plex Mono',monospace;
+    --sans:'Vazirmatn','Vazirmatn Placeholder',sans-serif;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;background:var(--ink);color:var(--paper);font-family:var(--sans);}
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(ellipse 900px 500px at 50% -10%, rgba(201,161,90,.09), transparent 60%),
+      repeating-linear-gradient(0deg, rgba(255,255,255,.012) 0 1px, transparent 1px 3px),
+      var(--ink);
+    padding-bottom:56px;
+  }
+  ::selection{background:var(--gold); color:var(--ink);}
+  @media (prefers-reduced-motion: reduce){ *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+
+  /* ---------- progress: security clearance meter ---------- */
+  .clearance-bar{
+    position:fixed; top:0; right:0; left:0; height:38px; z-index:50;
+    background:linear-gradient(180deg, rgba(14,19,25,.97), rgba(14,19,25,.86));
+    border-bottom:1px solid var(--hairline);
+    display:flex; align-items:center; gap:10px; padding:0 14px;
+    backdrop-filter:blur(6px);
+  }
+  .clearance-label{font-family:var(--mono); font-size:10px; letter-spacing:.14em; color:var(--steel); white-space:nowrap;}
+  .clearance-track{flex:1; height:5px; background:var(--hairline); border-radius:3px; overflow:hidden; position:relative;}
+  .clearance-fill{height:100%; width:0%; background:linear-gradient(90deg,var(--gold),var(--gold-bright)); border-radius:3px; transition:width .25s ease-out;}
+  .clearance-pct{font-family:var(--mono); font-size:11px; color:var(--gold-bright); width:34px; text-align:left;}
+
+  /* ---------- hero: dossier cover ---------- */
+  .hero{padding:70px 22px 40px; text-align:center; position:relative; overflow:hidden;}
+  .hero::before{
+    content:""; position:absolute; inset:0;
+    background-image:
+      linear-gradient(var(--hairline) 1px, transparent 1px),
+      linear-gradient(90deg, var(--hairline) 1px, transparent 1px);
+    background-size:26px 26px;
+    opacity:.18; mask-image:radial-gradient(ellipse 60% 50% at 50% 20%, #000 30%, transparent 75%);
+  }
+  .classified-tag{
+    position:relative; display:inline-flex; align-items:center; gap:8px;
+    font-family:var(--mono); font-size:11px; letter-spacing:.22em; color:var(--signal-bright);
+    border:1px solid rgba(179,67,46,.55); padding:5px 12px; border-radius:999px;
+    background:rgba(179,67,46,.08);
+    opacity:0; animation:fadeUp .6s ease-out .1s forwards;
+  }
+  .classified-tag .dot{width:6px;height:6px;border-radius:50%;background:var(--signal-bright); box-shadow:0 0 8px var(--signal-bright); animation:pulse 1.8s ease-in-out infinite;}
+  .hero h1{
+    position:relative; font-weight:900; font-size:clamp(30px,8vw,44px); line-height:1.25; margin:22px 0 8px;
+    letter-spacing:-.01em;
+    opacity:0; animation:fadeUp .6s ease-out .22s forwards;
+  }
+  .hero h1 em{font-style:normal; color:var(--gold-bright);}
+  .hero p.sub{
+    position:relative; color:var(--steel); font-size:15px; line-height:1.9; max-width:340px; margin:0 auto;
+    opacity:0; animation:fadeUp .6s ease-out .34s forwards;
+  }
+  .file-meta{
+    position:relative; margin-top:26px; display:inline-flex; gap:18px; font-family:var(--mono); font-size:10.5px; color:var(--steel);
+    border-top:1px dashed var(--hairline); border-bottom:1px dashed var(--hairline); padding:10px 18px;
+    opacity:0; animation:fadeUp .6s ease-out .46s forwards;
+  }
+  .file-meta b{color:var(--gold-bright); font-weight:600;}
+
+  @keyframes fadeUp{from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:translateY(0);}}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.25;}}
+
+  /* ---------- briefing sections ---------- */
+  .briefings{padding:10px 16px 0; max-width:520px; margin:0 auto;}
+  .briefing{
+    position:relative; background:var(--panel); border:1px solid var(--hairline); border-radius:var(--radius);
+    margin:0 0 16px; padding:22px 20px 20px; overflow:hidden;
+    opacity:0; transform:translateY(22px);
+    transition:opacity .55s cubic-bezier(.2,.7,.3,1), transform .55s cubic-bezier(.2,.7,.3,1);
+  }
+  .briefing.in-view{opacity:1; transform:translateY(0);}
+  .briefing::before{ /* left accent spine */
+    content:""; position:absolute; top:0; bottom:0; right:0; width:3px; background:var(--hairline);
+  }
+  .briefing.in-view::before{background:linear-gradient(180deg,var(--gold),transparent);}
+  .b-head{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px;}
+  .b-num{font-family:var(--mono); font-size:11px; color:var(--steel); letter-spacing:.12em;}
+  .b-num b{color:var(--gold-bright); font-size:13px;}
+  .b-icon{font-size:22px; filter:saturate(.9);}
+  .b-title{font-weight:700; font-size:18px; margin:0 0 8px;}
+  .b-body{color:#c3cbd4; font-size:14.5px; line-height:1.95; margin:0;}
+  .b-body b{color:var(--paper); font-weight:600;}
+  .b-tags{display:flex; flex-wrap:wrap; gap:6px; margin-top:14px;}
+  .b-tag{font-family:var(--mono); font-size:10.5px; color:var(--gold-bright); background:rgba(201,161,90,.09); border:1px solid rgba(201,161,90,.25); padding:4px 9px; border-radius:6px;}
+
+  /* stamp */
+  .stamp{
+    position:absolute; left:16px; top:16px; width:66px; height:66px; border-radius:50%;
+    border:2.5px solid var(--ok); color:var(--ok); display:flex; align-items:center; justify-content:center;
+    font-family:var(--mono); font-size:9.5px; font-weight:600; letter-spacing:.05em; text-align:center;
+    transform:rotate(-16deg) scale(1.5); opacity:0;
+    transition:transform .5s cubic-bezier(.34,1.56,.64,1) .15s, opacity .35s ease .15s;
+    box-shadow:0 0 0 2px rgba(90,156,110,.15) inset;
+    pointer-events:none;
+  }
+  .briefing.in-view .stamp{transform:rotate(-16deg) scale(1); opacity:.92;}
+  .stamp span{display:block; line-height:1.25;}
+
+  /* signature: war-room seal, top of section 5 only */
+  .briefing.war{border-color:rgba(179,67,46,.35);}
+  .briefing.war .stamp{border-color:var(--signal-bright); color:var(--signal-bright); box-shadow:0 0 0 2px rgba(179,67,46,.15) inset;}
+  .briefing.war::before{background:var(--hairline);}
+  .briefing.war.in-view::before{background:linear-gradient(180deg,var(--signal-bright),transparent);}
+
+  /* ---------- divider ---------- */
+  .section-divider{display:flex; align-items:center; gap:10px; margin:26px 0 14px; color:var(--steel); font-family:var(--mono); font-size:10.5px; letter-spacing:.18em;}
+  .section-divider::before,.section-divider::after{content:""; flex:1; height:1px; background:var(--hairline);}
+
+  /* ---------- closing CTA ---------- */
+  .closing{padding:8px 16px 30px; max-width:520px; margin:0 auto; text-align:center;}
+  .closing .seal-final{
+    width:84px; height:84px; margin:6px auto 18px; border-radius:50%; border:2.5px solid var(--gold);
+    display:flex; align-items:center; justify-content:center; font-size:34px;
+    box-shadow:0 0 0 6px rgba(201,161,90,.08), 0 0 26px rgba(201,161,90,.18);
+  }
+  .closing h2{font-size:21px; font-weight:900; margin:0 0 8px;}
+  .closing p{color:var(--steel); font-size:14px; line-height:1.85; max-width:320px; margin:0 auto 22px;}
+  .cta{
+    appearance:none; border:none; width:100%; max-width:320px; padding:16px 20px; border-radius:12px;
+    background:linear-gradient(180deg,var(--gold-bright),var(--gold)); color:#1a1305; font-family:var(--sans);
+    font-weight:700; font-size:16px; cursor:pointer; letter-spacing:.01em;
+    box-shadow:0 10px 24px -8px rgba(201,161,90,.55);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .cta:active{transform:translateY(1px) scale(.99); box-shadow:0 6px 14px -6px rgba(201,161,90,.5);}
+  .cta-note{margin-top:12px; font-family:var(--mono); font-size:10.5px; color:var(--steel);}
+
+  a.credit{display:block; text-align:center; color:var(--hairline); font-family:var(--mono); font-size:9.5px; margin-top:18px; text-decoration:none;}
+</style>
+</head>
+<body>
+
+  <div class="clearance-bar">
+    <span class="clearance-label">CLEARANCE</span>
+    <div class="clearance-track"><div class="clearance-fill" id="clearFill"></div></div>
+    <span class="clearance-pct" id="clearPct">0%</span>
+  </div>
+
+  <header class="hero">
+    <span class="classified-tag"><span class="dot"></span> پرونده محرمانه · تازه‌وارد</span>
+    <h1>پیش از نشستن روی تخت حکومت،<br><em>این پرونده را بخوانید</em></h1>
+    <p class="sub">شش بریفینگ کوتاه؛ هرچه که برای اداره‌ی یک کشور در «اسطوره‌ی حاکمان» لازم دارید. هرکدوم رو که خوندید، مهر تاییدش می‌خوره.</p>
+    <div class="file-meta">
+      <span>پرونده: <b>AOR-NEW</b></span>
+      <span>سطح: <b>عمومی</b></span>
+      <span>بریفینگ: <b>۶</b></span>
+    </div>
+  </header>
+
+  <main class="briefings">
+
+    <section class="briefing" data-b="1">
+      <div class="stamp"><span>تایید<br>شد</span></div>
+      <div class="b-head"><span class="b-num">بریفینگ <b>۰۱</b></span><span class="b-icon">🌍</span></div>
+      <h3 class="b-title">کشورگیری</h3>
+      <p class="b-body">اولین قدم، انتخاب کشورتونه. از بین قاره‌ها یکی رو انتخاب کنید و یه کشور آزاد بردارید — <b>هر کشور فقط برای یک نفر</b>. عجله کنید، کشورهای محبوب زود گرفته می‌شن.</p>
+      <p class="b-body">یه دسته‌ی جدا هم هست: <b>کشورهای VIP</b> (قدرت‌های بزرگ جهان) — این‌ها با خرید مستقیم و همیشگی مال شما می‌شن و بودجه‌ی شروع بیشتری هم می‌دن.</p>
+      <div class="b-tags"><span class="b-tag">یک‌بار برای همیشه</span><span class="b-tag">اول کسی، مال اونه</span></div>
+    </section>
+
+    <section class="briefing" data-b="2">
+      <div class="stamp"><span>تایید<br>شد</span></div>
+      <div class="b-head"><span class="b-num">بریفینگ <b>۰۲</b></span><span class="b-icon">💰</span></div>
+      <h3 class="b-title">اقتصاد و بازار</h3>
+      <p class="b-body">با بودجه‌ی کشورتون از بازار <b>تجهیزات نظامی، ماینر و منابع خام</b> می‌خرید. قیمت‌ها ثابت نیستن — گاهی ادمین «آفر» می‌ذاره و همه‌چیز موقتاً ارزون‌تر می‌شه.</p>
+      <p class="b-body">صادرات و واردات هم هست: می‌تونید مستقیم به <b>سازمان ملل</b> بفروشید (فوری، قیمت رسمی) یا صبر کنید یه کشور دیگه درخواستتون رو قبول کنه.</p>
+      <div class="b-tags"><span class="b-tag">بازار</span><span class="b-tag">صادرات/واردات</span><span class="b-tag">بازار سیاه</span></div>
+    </section>
+
+    <section class="briefing" data-b="3">
+      <div class="stamp"><span>تایید<br>شد</span></div>
+      <div class="b-head"><span class="b-num">بریفینگ <b>۰۳</b></span><span class="b-icon">⛏️</span></div>
+      <h3 class="b-title">ماینینگ</h3>
+      <p class="b-body">ماینر بخرید، فعالش کنید، و بعد از گذشت زمان مشخص، <b>ارز خام</b> جمع می‌کنه که می‌تونید توی بازار ارز نقدش کنید. یه منبع درآمد ثابت و بدون ریسک، در کنار بقیه‌ی فعالیت‌ها.</p>
+      <div class="b-tags"><span class="b-tag">درآمد غیرفعال</span></div>
+    </section>
+
+    <section class="briefing" data-b="4">
+      <div class="stamp"><span>تایید<br>شد</span></div>
+      <div class="b-head"><span class="b-num">بریفینگ <b>۰۴</b></span><span class="b-icon">🤝</span></div>
+      <h3 class="b-title">اتحاد و دیپلماسی</h3>
+      <p class="b-body">به یه اتحاد بپیوندید یا خودتون یکی بسازید. اعضا می‌تونن به <b>خزانه‌ی مشترک</b> کمک کنن، و رهبر اتحاد می‌تونه ازش برای پروژه‌های مشترک استفاده کنه.</p>
+      <p class="b-body">با کشورهای دیگه می‌تونید <b>پیمان صلح</b> ببندید یا وارد <b>مذاکره</b> بشید — دیپلماسی همیشه ارزون‌تر از جنگه.</p>
+      <div class="b-tags"><span class="b-tag">خزانه</span><span class="b-tag">پیمان صلح</span><span class="b-tag">مذاکره</span></div>
+    </section>
+
+    <section class="briefing war" data-b="5">
+      <div class="stamp"><span>تایید<br>شد</span></div>
+      <div class="b-head"><span class="b-num">بریفینگ <b>۰۵</b></span><span class="b-icon">⚔️</span></div>
+      <h3 class="b-title">جنگ</h3>
+      <p class="b-body">با تجهیزاتی که خریدید به یه کشور دیگه حمله کنید. برنده غرامت می‌گیره، بازنده می‌ده. تجهیزات مصرف می‌شن — چه ببرید چه ببازید، پس هوشمندانه انتخاب کنید.</p>
+      <p class="b-body">اگه اتحادتون رسماً «اعلام جنگ» بده، یه <b>نبرد سرنوشت‌ساز</b> بین کل قدرت نظامی دو اتحاد رخ می‌ده — غرامت و افتخارش هم به همون نسبت بزرگ‌تره.</p>
+      <div class="b-tags"><span class="b-tag">حمله‌ی تکی</span><span class="b-tag">جنگ اتحادها</span></div>
+    </section>
+
+    <section class="briefing" data-b="6">
+      <div class="stamp"><span>تایید<br>شد</span></div>
+      <div class="b-head"><span class="b-num">بریفینگ <b>۰۶</b></span><span class="b-icon">🌟</span></div>
+      <h3 class="b-title">اشتراک VIP</h3>
+      <p class="b-body">دو سطح، برنزی و طلایی: سود اوراق و تخفیف بازار بیشتر، پاداش ورود روزانه‌ی اضافه، و بونوس روی هر خرید بودجه. هفتگی یا فصلی (با تخفیف) قابل خریدنه.</p>
+      <p class="b-body">نکته: کشورهای VIP ربطی به این اشتراک ندارن — اون‌ها جدا و با خرید مستقیم مال شما می‌شن.</p>
+      <div class="b-tags"><span class="b-tag">🥉 برنزی</span><span class="b-tag">🥇 طلایی</span></div>
+    </section>
+
+  </main>
+
+  <div class="section-divider">پایان پرونده</div>
+
+  <div class="closing">
+    <div class="seal-final">👑</div>
+    <h2>پرونده کامل مطالعه شد</h2>
+    <p>شش بریفینگ، شش مهر. حالا وقتشه از تئوری برید سراغ عمل — یه کشور انتخاب کنید و شروع کنید.</p>
+    <button class="cta" id="startBtn">بستن و شروع بازی ⚔️</button>
+    <div class="cta-note" id="clearanceNote">CLEARANCE 0/6 · در حال محاسبه…</div>
+  </div>
+
+  <a class="credit" href="#" onclick="return false">AGE OF RULERS — INTERNAL BRIEFING</a>
+
+<script>
+(function(){
+  var WebApp = (window.Bale && window.Bale.WebApp) ? window.Bale.WebApp : null;
+  try { if (WebApp && WebApp.ready) WebApp.ready(); } catch(e){}
+  try { if (WebApp && WebApp.expand) WebApp.expand(); } catch(e){}
+
+  var sections = Array.prototype.slice.call(document.querySelectorAll('.briefing'));
+  var seen = new Set();
+  var fill = document.getElementById('clearFill');
+  var pct = document.getElementById('clearPct');
+  var note = document.getElementById('clearanceNote');
+
+  function updateClearance(){
+    var n = seen.size;
+    var total = sections.length;
+    var p = Math.round((n/total)*100);
+    fill.style.width = p + '%';
+    pct.textContent = p + '%';
+    note.textContent = 'CLEARANCE ' + n + '/' + total + (n===total ? ' · کامل ✓' : ' · در حال بررسی…');
+  }
+
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (en.isIntersecting && en.intersectionRatio > 0.35){
+          en.target.classList.add('in-view');
+          seen.add(en.target.getAttribute('data-b'));
+          updateClearance();
+        }
+      });
+    }, {threshold:[0,.35,.6,1]});
+    sections.forEach(function(s){ io.observe(s); });
+  } else {
+    sections.forEach(function(s){ s.classList.add('in-view'); seen.add(s.getAttribute('data-b')); });
+    updateClearance();
+  }
+
+  document.getElementById('startBtn').addEventListener('click', function(){
+    try {
+      if (WebApp && WebApp.sendData) WebApp.sendData(JSON.stringify({event:'tutorial_done'}));
+    } catch(e){}
+    try {
+      if (WebApp && WebApp.close){ WebApp.close(); return; }
+    } catch(e){}
+    // fallback for testing outside Bale (plain browser)
+    document.getElementById('startBtn').textContent = '✓ ثبت شد — می‌تونید این پنجره رو ببندید';
+    document.getElementById('startBtn').disabled = true;
+  });
+})();
+</script>
+</body>
+</html>
